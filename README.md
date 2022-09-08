@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 #include<ctype.h>
 #include <string.h>
@@ -24,15 +23,15 @@ int main()
 
         int flag=0;
         for(int j=0;j<count;j++){
-        	if(productionSet[i][0]==list[j])
-        		flag=1;
+            if(productionSet[i][0]==list[j])
+                flag=1;
         }
         if(flag==0){
-        	list[count++]=productionSet[i][0];
+            list[count++]=productionSet[i][0];
         }
     }
-    printf("\n\nFirst Set: \n")
-    	for(int j=0;j<count;j++){
+    printf("\n\nFirst Set: \n");
+        for(int j=0;j<count;j++){
         FIRST(result,list[j]); //Compute FIRST; Get Answer in 'result' array
         printf("FIRST(%c)= { ",list[j]);
         for(i=0;result[i]!='\0';i++)
