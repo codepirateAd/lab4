@@ -1,8 +1,8 @@
 # lab4
 
-#include<stdio.h>
-#include<ctype.h>
-#include <string.h>
+include<stdio.h>
+include<ctype.h>
+include <string.h>
 void FIRST(char[],char );
 void addToResultSet(char[],char);
 int numOfProductions;
