@@ -1,94 +1,118 @@
-
 #include<stdio.h>
 #include<ctype.h>
-#include <string.h>
-void FIRST(char[],char );
-void addToResultSet(char[],char);
-int numOfProductions;
-char productionSet[10][10];
+#include<string.h>
+
+void findfirst(char, int, int);
+int count, n = 0;
+
+char calc_first[10][100];
+int m = 0;
+
+// Stores the production rules
+char production[10][10];
+char f[10], first[10];
+int k;
+char ck;
+int e;
+
 int main()
 {
-    int i;
-    char choice; 
-    char c;
-    char result[20];
-    char list[10];
-    int count =0;
+	int jm = 0;
+	int km = 0;
+	int i, choice;
+	char c, ch;
+	count = 7;
+	
+	strcpy(production[0], "S=ABC");
+	strcpy(production[1], "A=a");
+	strcpy(production[2], "A=#");
+	strcpy(production[3], "B=b");
+	strcpy(production[4], "B=#");
+	strcpy(production[5], "C=c");
+	strcpy(production[6], "C=#");
+	
+	int kay;
+	char done[count];
+	int ptr = -1;
+	
+	// Initializing the calc_first array
+	for(k = 0; k < count; k++) {
+		for(kay = 0; kay < 100; kay++) {
+			calc_first[k][kay] = '!';
+		}
+	}
+	int point1 = 0, point2, xxx;
+	for(k = 0; k < count; k++){
+		c = production[k][0];
+		point2 = 0;
+		xxx = 0;
+		
+		for(kay = 0; kay <= ptr; kay++)
+			if(c == done[kay])
+				xxx = 1;
+				
+		if (xxx == 1)
+			continue;
 
-    printf("How many number of productions ? :");
-    scanf(" %d",&numOfProductions);
-
-    for(i=0;i<numOfProductions;i++){
-        printf("Enter productions Number %d : ",i+1);
-        scanf(" %s",productionSet[i]);
-
-        int flag=0;
-        for(int j=0;j<count;j++){
-            if(productionSet[i][0]==list[j])
-                flag=1;
-        }
-        if(flag==0){
-            list[count++]=productionSet[i][0];
-        }
-    }
-    printf("\n\nFirst Set: \n");
-        for(int j=0;j<count;j++){
-        FIRST(result,list[j]); //Compute FIRST; Get Answer in 'result' array
-        printf("FIRST(%c)= { ",list[j]);
-        for(i=0;result[i]!='\0';i++)
-        printf("%c ",result[i]);       //Display result
-        printf("}\n");
-    }
+		findfirst(c, 0, 0);
+		ptr += 1;
+		
+		done[ptr] = c;
+		printf("\n First(%c) = { ", c);
+		calc_first[point1][point2++] = c;
+		
+		// Printing the First Sets of the grammar
+		for(i = 0 + jm; i < n; i++) {
+			int lark = 0, chk = 0;
+			
+			for(lark = 0; lark < point2; lark++) {
+				
+				if (first[i] == calc_first[point1][lark])
+				{
+					chk = 1;
+					break;
+				}
+			}
+			if(chk == 0)
+			{
+				printf("%c, ", first[i]);
+				calc_first[point1][point2++] = first[i];
+			}
+		}
+		printf("}\n");
+		jm = n;
+		point1++;
+	}
 }
 
-void FIRST(char* Result,char c)
+
+void findfirst(char c, int q1, int q2)
 {
-    int i,j,k;
-    char subResult[20];
-    int foundEpsilon;
-    subResult[0]='\0';
-    Result[0]='\0';
+	int j;
 
-    if(!(isupper(c))){
-        addToResultSet(Result,c);
-               return ;
-    }
-    for(i=0;i<numOfProductions;i++){
-        if(productionSet[i][0]==c)
-        {
- if(productionSet[i][2]=='$') addToResultSet(Result,'$');
-      else
-            {
-                j=2;
-                while(productionSet[i][j]!='\0')
-                {
-                foundEpsilon=0;
-                FIRST(subResult,productionSet[i][j]);
-                for(k=0;subResult[k]!='\0';k++)
-                    addToResultSet(Result,subResult[k]);
-                 for(k=0;subResult[k]!='\0';k++)
-                     if(subResult[k]=='$')
-                     {
-                         foundEpsilon=1;
-                         break;
-                     }
-                 //No ε found, no need to check next element
-                 if(!foundEpsilon)
-                     break;
-                 j++;
-                }
-            }
-    }
-}
-    return ;
-}
-
-void addToResultSet(char Result[],char val)
-{
-    int k;
-    for(k=0 ;Result[k]!='\0';k++)
-        if(Result[k]==val)
-            return;
-    Result[k]=val;
-    Result[k+1]='\0';
+	if(!(isupper(c))) {
+		first[n++] = c;
+	}
+	for(j = 0; j < count; j++)
+	{
+		if(production[j][0] == c)
+		{
+			if(production[j][2] == '#')
+			{
+				if(production[q1][q2] == '\0')
+					first[n++] = '#';
+				else if(production[q1][q2] != '\0'
+						&& (q1 != 0 || q2 != 0))
+				{
+					findfirst(production[q1][q2], q1, (q2+1));
+				}
+				else
+					first[n++] = '#';
+			}
+			else if(!isupper(production[j][2]))
+				first[n++] = production[j][2];
+			else
+				findfirst(production[j][2], j, 3);
+		}
+	}
 }
